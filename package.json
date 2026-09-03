@@ -1,0 +1,30 @@
+{
+  "name": "ms-empreendimentos-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/clean-build.mjs && next build && node scripts/harden-export.mjs && npm run security:check && node scripts/build-sites-static.mjs && node scripts/check-worker-build.mjs",
+    "build:sites": "npm run build",
+    "build:vercel": "node scripts/build-vercel.mjs",
+    "test:vercel": "node --test scripts/vercel-output.test.mjs scripts/site-origin.test.mjs",
+    "security:check": "node --test scripts/security-policy.test.mjs worker/security.test.mjs && node scripts/check-security.mjs",
+    "security:audit": "npm audit --audit-level=low",
+    "start": "next start"
+  },
+  "dependencies": {
+    "framer-motion": "^13.1.1",
+    "next": "^15.5.25",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "swiper": "^14.2.0",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.5",
+    "wrangler": "^4.127.1"
+  },
+  "overrides": {
+    "postcss": "8.5.26"
+  }
+}

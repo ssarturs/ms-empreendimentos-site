@@ -1,0 +1,17 @@
+.next/
+.next-dev/
+.open-next/
+.wrangler/
+out/
+node_modules/
+*-site-build.tar.gz
+.DS_Store
+*.log
+.env*
+!.env.example
+dist/
+upload/
+*.tgz
+*.tar.gz
+backups/
+.vercel/
