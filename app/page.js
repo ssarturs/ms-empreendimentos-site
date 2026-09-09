@@ -1,16 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { SiteHeader, Brand, Icon } from "./site-header";
+import ProjectCard from "./project-card";
 import { motion, useReducedMotion } from "framer-motion";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { A11y, Navigation, Pagination } from "swiper/modules";
-
-const FloorPlanViewer = dynamic(() => import("./floor-plan-viewer"), {
-  ssr: false,
-  loading: () => <div className="planLoading" role="status">Preparando a planta 3D…</div>,
-});
 
 const WHATSAPP_NUMBER = "557999253884";
 const ADDRESS =
@@ -73,46 +66,156 @@ const services = [
   },
 ];
 
-const projects = [
+const portfolioProjects = [
   {
-    id: "lamarao-fachada",
-    title: "Casa Lamarão",
-    subtitle: "Fachada contemporânea",
-    description: "Estudo residencial com linhas marcantes e leitura arquitetônica atual.",
-    image: "/projetos/casa-lamarao-fachada.jpg",
-    alt: "Fachada contemporânea da Casa Lamarão",
-    categories: ["Residencial", "Estudos"],
+    id: "residencia-lamarao",
+    number: "01",
+    title: "Residência Lamarão",
+    location: "Aracaju • SE",
+    description: "Arquitetura contemporânea e ambientes conectados para uma rotina prática, confortável e acolhedora.",
+    badges: ["PROJETO 3D & CONSTRUÇÃO", "RESIDENCIAL"],
+    facts: ["168,16 m² de terreno", "83,59 m² construídos", "2 quartos"],
+    whatsappMessage: "Olá! Gostaria de saber mais sobre o Projeto Residência Lamarão.",
+    media: [
+      {
+        id: "fachada",
+        label: "Fachada",
+        kind: "image",
+        src: "/projetos/casa-lamarao-fachada.jpg",
+        alt: "Fachada contemporânea da Residência Lamarão",
+        width: 1280,
+        height: 720,
+        caption: "Fachada contemporânea com linhas marcantes e composição arquitetônica atual.",
+      },
+      {
+        id: "gourmet",
+        label: "Área gourmet",
+        kind: "image",
+        src: "/projetos/casa-lamarao-area-externa.jpg",
+        alt: "Área externa gourmet da Residência Lamarão",
+        width: 1600,
+        height: 900,
+        caption: "Área externa integrada, pensada para convivência, conforto e uso cotidiano.",
+      },
+      {
+        id: "planta-3d",
+        label: "Planta 3D",
+        kind: "interactive",
+        viewer: "lamarao-360",
+        caption: "Maquete interativa com giro 360°, aproximação e vista superior.",
+      },
+    ],
   },
   {
-    id: "lamarao-externa",
-    title: "Casa Lamarão",
-    subtitle: "Área externa integrada",
-    description: "Espaço gourmet pensado para convivência, conforto e uso cotidiano.",
-    image: "/projetos/casa-lamarao-area-externa.jpg",
-    alt: "Área externa com espaço gourmet da Casa Lamarão",
-    categories: ["Residencial", "Estudos"],
+    id: "projeto-cidade-nova",
+    number: "02",
+    title: "Projeto Cidade Nova",
+    location: "Cidade Nova • Aracaju",
+    description: "Interiores integrados com marcenaria planejada, iluminação acolhedora e aproveitamento inteligente de cada ambiente.",
+    badges: ["PROJETO 3D", "INTERIORES"],
+    facts: ["Estar e jantar integrados", "Cozinha planejada", "Quartos e banheiros"],
+    whatsappMessage: "Olá! Gostaria de saber mais sobre o Projeto Cidade Nova.",
+    media: [
+      {
+        id: "sala",
+        label: "Sala",
+        kind: "image",
+        src: "/projetos/cidade-nova-sala-estar.jpg",
+        alt: "Projeto 3D da sala de estar integrada da residência Cidade Nova",
+        width: 1280,
+        height: 720,
+        caption: "Sala de estar e jantar integradas, com circulação fluida e leitura visual contínua.",
+      },
+      {
+        id: "cozinha",
+        label: "Cozinha",
+        kind: "image",
+        src: "/projetos/cidade-nova-cozinha.jpg",
+        alt: "Projeto 3D da cozinha planejada da residência Cidade Nova",
+        width: 1280,
+        height: 720,
+        caption: "Marcenaria amadeirada, bancada escura e iluminação linear valorizam a cozinha.",
+      },
+      {
+        id: "quarto",
+        label: "Quarto",
+        kind: "image",
+        src: "/projetos/cidade-nova-quarto-escritorio.jpg",
+        alt: "Projeto 3D do quarto com espaço de trabalho da residência Cidade Nova",
+        width: 1280,
+        height: 720,
+        caption: "Quarto e escritório compartilham uma marcenaria funcional feita sob medida.",
+      },
+      {
+        id: "banheiros",
+        label: "Banheiros",
+        kind: "gallery",
+        caption: "Duas propostas com revestimentos claros, contraste e iluminação bem distribuída.",
+        slides: [
+          { src: "/projetos/cidade-nova-banheiro-suite.jpg", alt: "Projeto 3D do banheiro da suíte da residência Cidade Nova", label: "Banheiro da suíte" },
+          { src: "/projetos/cidade-nova-banheiro-social.jpg", alt: "Projeto 3D do banheiro social da residência Cidade Nova", label: "Banheiro social" },
+        ],
+      },
+      {
+        id: "tour-3d",
+        label: "Tour 3D",
+        kind: "interactive",
+        viewer: "cidade-nova-tour",
+        caption: "Percorra os ambientes renderizados do projeto, um espaço por vez.",
+        slides: [
+          { src: "/projetos/cidade-nova-sala-estar.jpg", alt: "Sala de estar do Projeto Cidade Nova", label: "Sala de estar" },
+          { src: "/projetos/cidade-nova-sala-jantar.jpg", alt: "Sala de jantar do Projeto Cidade Nova", label: "Sala de jantar" },
+          { src: "/projetos/cidade-nova-cozinha.jpg", alt: "Cozinha do Projeto Cidade Nova", label: "Cozinha" },
+          { src: "/projetos/cidade-nova-quarto.jpg", alt: "Quarto principal do Projeto Cidade Nova", label: "Quarto principal" },
+          { src: "/projetos/cidade-nova-quarto-escritorio.jpg", alt: "Quarto com escritório do Projeto Cidade Nova", label: "Quarto e escritório" },
+          { src: "/projetos/cidade-nova-banheiro-suite.jpg", alt: "Banheiro da suíte do Projeto Cidade Nova", label: "Banheiro da suíte" },
+          { src: "/projetos/cidade-nova-banheiro-social.jpg", alt: "Banheiro social do Projeto Cidade Nova", label: "Banheiro social" },
+        ],
+      },
+    ],
   },
   {
-    id: "socorro-fachada",
+    id: "casa-socorro",
+    number: "03",
     title: "Casa Socorro",
-    subtitle: "Fachada residencial",
-    description: "Composição sóbria, funcional e alinhada ao contexto do imóvel.",
-    image: "/projetos/casa-socorro-fachada.jpg",
-    alt: "Fachada da Casa Socorro",
-    categories: ["Residencial", "Obra concluída"],
+    location: "Nossa Senhora do Socorro • SE",
+    description: "Uma obra concluída com fachada sóbria e ambientes internos claros, funcionais e confortáveis.",
+    badges: ["OBRA ENTREGUE", "RESIDENCIAL"],
+    facts: ["Fachada concluída", "Ambientes internos", "Execução MS"],
+    whatsappMessage: "Olá! Gostaria de saber mais sobre a Casa Socorro.",
+    media: [
+      {
+        id: "fachada",
+        label: "Fachada",
+        kind: "image",
+        src: "/projetos/casa-socorro-fachada.jpg",
+        alt: "Fachada concluída da Casa Socorro",
+        width: 1600,
+        height: 1200,
+        caption: "Fachada residencial concluída, com composição sóbria e funcional.",
+      },
+      {
+        id: "interiores",
+        label: "Interiores",
+        kind: "image",
+        src: "/projetos/casa-socorro-interior.jpg",
+        alt: "Ambiente interno concluído da Casa Socorro",
+        width: 1600,
+        height: 1200,
+        caption: "Ambientes internos claros e organizados para uma rotina mais confortável.",
+      },
+    ],
   },
   {
-    id: "socorro-interior",
-    title: "Casa Socorro",
-    subtitle: "Ambientes internos",
-    description: "Interiores claros e funcionais para uma rotina mais confortável.",
-    image: "/projetos/casa-socorro-interior.jpg",
-    alt: "Ambiente interno claro da Casa Socorro",
-    categories: ["Residencial", "Obra concluída"],
+    id: "novo-empreendimento-ms",
+    number: "04",
+    title: "Novo Empreendimento MS",
+    description: "Estamos preparando um novo conceito em moradia e arquitetura para a região.",
+    badges: ["EM BREVE"],
+    teaser: true,
+    whatsappMessage: "Olá! Quero receber o spoiler do novo empreendimento da MS em primeira mão.",
   },
 ];
-
-const projectFilters = ["Todos", "Residencial", "Estudos", "Obra concluída"];
 
 function Reveal({ children, className = "", delay = 0 }) {
   const reduceMotion = useReducedMotion();
@@ -133,19 +236,15 @@ function whatsappUrl(message) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+const LEADS_ENDPOINT = "https://msleads-worker.arturzinzito.workers.dev";
+
 export default function Home() {
   const [activeService, setActiveService] = useState("construcao");
   const [intent, setIntent] = useState("Orçamento");
   const [service, setService] = useState("Construção de imóveis");
   const [name, setName] = useState("");
   const [copied, setCopied] = useState(false);
-  const [projectFilter, setProjectFilter] = useState("Todos");
   const [contactVisible, setContactVisible] = useState(false);
-  const [planOpen, setPlanOpen] = useState(false);
-
-  const filteredProjects = projectFilter === "Todos"
-    ? projects
-    : projects.filter((project) => project.categories.includes(projectFilter));
 
   useEffect(() => {
     const contact = document.querySelector("#contato");
@@ -160,8 +259,23 @@ export default function Home() {
 
   function sendRequest(event) {
     event.preventDefault();
-    const greeting = name.trim() ? `Olá! Meu nome é ${name.trim()}.` : "Olá!";
-    const message = `${greeting} Gostaria de falar sobre ${intent.toLowerCase()} para o serviço de ${service}. Vim pelo site da MS Empreendimentos.`;
+    const greeting = name.trim()
+      ? `Olá! Meu nome é ${name.trim()}.`
+      : "Olá!";
+    const message =
+      `${greeting} Gostaria de falar sobre ${intent.toLowerCase()} ` +
+      `para o serviço de ${service}. Vim pelo site da MS Empreendimentos.`;
+    fetch(LEADS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tabela: "clientes",
+        nome: name.trim() || null,
+        origem: "site",
+        servico_interesse: service,
+        observacoes: intent,
+      }),
+    }).catch(() => {});
     window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
   }
 
@@ -334,99 +448,21 @@ export default function Home() {
         <div className="shell">
           <Reveal className="galleryHeading">
             <div>
-              <p className="eyebrow"><span /> Portfólio MS</p>
-              <h2>Projetos que mostram<br />como pensamos cada espaço.</h2>
+              <p className="eyebrow"><span /> Projetos & experiências 3D</p>
+              <h2>Um projeto completo.<br />Todos os detalhes no mesmo lugar.</h2>
             </div>
-            <p>Explore imagens da Casa Lamarão e da Casa Socorro e conheça diferentes etapas do nosso trabalho residencial.</p>
+            <p>Veja fachadas, interiores e maquetes interativas sem sair do projeto. Escolha uma mídia e explore no seu ritmo.</p>
           </Reveal>
 
-          <Reveal className="projectFilters" delay={0.04}>
-            {projectFilters.map((filter) => (
-              <button
-                key={filter}
-                className={projectFilter === filter ? "active" : ""}
-                onClick={() => setProjectFilter(filter)}
-                aria-pressed={projectFilter === filter}
-              >
-                {filter}
-              </button>
+          <div className="portfolioGrid">
+            {portfolioProjects.map((project, index) => (
+              <Reveal key={project.id} delay={Math.min(index * 0.04, 0.12)}>
+                <ProjectCard
+                  project={project}
+                  whatsappHref={whatsappUrl(project.whatsappMessage)}
+                />
+              </Reveal>
             ))}
-          </Reveal>
-
-          <Reveal className="galleryCarousel" delay={0.08}>
-            <Swiper
-              key={projectFilter}
-              modules={[Navigation, Pagination, A11y]}
-              navigation
-              pagination={{ clickable: true }}
-              spaceBetween={18}
-              slidesPerView={1.08}
-              breakpoints={{
-                680: { slidesPerView: 1.42, spaceBetween: 20 },
-                980: { slidesPerView: 2.08, spaceBetween: 22 },
-              }}
-            >
-              {filteredProjects.map((project) => (
-                <SwiperSlide key={project.id}>
-                  <article className="galleryCard">
-                    <img src={project.image} alt={project.alt} />
-                    <div className="galleryShade" />
-                    <div className="galleryMeta">
-                      <small>{project.categories[1]} • RESIDENCIAL</small>
-                      <h3>{project.title}</h3>
-                      <p>{project.subtitle}</p>
-                    </div>
-                    <div className="galleryDetails">
-                      <p>{project.description}</p>
-                      <a
-                        href={whatsappUrl(`Olá! Gostaria de saber mais sobre ${project.title} — ${project.subtitle}.`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Ver detalhes <Icon name="arrow" size={18} />
-                      </a>
-                    </div>
-                  </article>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="floorPlansSection" id="plantas-3d" aria-labelledby="floor-plans-title">
-        <div className="shell">
-          <Reveal className="sectionHeading">
-            <div>
-              <p className="eyebrow"><span /> Plantas 3D</p>
-              <h2 id="floor-plans-title">Imagine sua rotina<br />em cada ambiente.</h2>
-            </div>
-            <p>Explore um modelo residencial em três dimensões. Gire a casa, veja a planta por cima e aproxime os detalhes.</p>
-          </Reveal>
-          <div className="planShowcase">
-            <div className="planInformation">
-              <p className="planNumber">MODELO RESIDENCIAL / 03</p>
-              <h3>Espaço para viver<br />e receber.</h3>
-              <p>Três quartos, incluindo uma suíte, com estar e jantar, cozinha, varanda e área gourmet no quintal.</p>
-              <dl className="planFacts">
-                <div><dt>Terreno</dt><dd>8 × 20 m</dd></div>
-                <div><dt>Quartos</dt><dd>3</dd></div>
-                <div><dt>Suíte</dt><dd>1</dd></div>
-              </dl>
-              <p className="planOtherSpaces">Área de serviço, passagem lateral, jardim e uma vaga de estacionamento.</p>
-              <a className="button primary" href="#contato">Quero um projeto assim <Icon name="arrow" size={18} /></a>
-              <p className="planIllustrationNote">Maquete ilustrativa com paredes em corte. Mobiliário, paisagismo e acabamentos são sugestões de apresentação.</p>
-            </div>
-            <div className="planViewerShell">
-              {planOpen ? <FloorPlanViewer /> : (
-                <div className="planPoster">
-                  <img src="/modelos/planta-03.png" alt="Maquete em perspectiva da Planta 03, com três quartos, varanda, jardim e estacionamento" width="2112" height="1620" loading="lazy" />
-                  <button type="button" className="button primary planLaunch" onClick={() => setPlanOpen(true)}>
-                    Explorar planta em 3D <Icon name="arrow" size={19} />
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </section>

@@ -31,7 +31,7 @@ export function contentPolicy(hashes, { header = false } = {}) {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self' data:",
-    "connect-src 'self'",
+    "connect-src 'self' https://msleads-worker.arturzinzito.workers.dev",
     "frame-src 'self' https://www.google.com https://maps.google.com",
     "form-action 'none'",
     "media-src 'none'",

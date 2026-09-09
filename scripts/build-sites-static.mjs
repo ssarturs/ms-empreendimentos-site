@@ -7,13 +7,12 @@ import { contentPolicy, inlineScriptHashes } from "./security-policy.mjs";
 // Next/OpenNext is used only at build time, never in the hosted runtime.
 const files = await readdir("out", { recursive: true, withFileTypes: true });
 const routes = { "/": "/", "/favicon.ico": "/icon.svg" };
-const assets = {};
 const hashes = new Set();
 const mimeTypes = {
   html: "text/html; charset=utf-8", js: "text/javascript; charset=utf-8",
   css: "text/css; charset=utf-8", json: "application/json; charset=utf-8",
   txt: "text/plain; charset=utf-8", svg: "image/svg+xml",
-  png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg",
+  png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp",
   ico: "image/x-icon", woff: "font/woff", woff2: "font/woff2",
   glb: "model/gltf-binary",
 };
@@ -25,15 +24,15 @@ for (const entry of files) {
   if (assetPath.endsWith(".html")) {
     inlineScriptHashes(data.toString("utf8")).forEach(hash => hashes.add(hash));
   }
-  const type = mimeTypes[assetPath.split(".").at(-1)];
-  if (!type) throw new Error(`Unapproved asset format: ${assetPath}`);
+  if (!mimeTypes[assetPath.split(".").at(-1)]) {
+    throw new Error(`Unapproved asset format: ${assetPath}`);
+  }
   routes[`/${assetPath}`] = `/${assetPath}`;
   if (assetPath.endsWith(".html") && assetPath !== "404.html") {
     const pageRoute = assetPath === "index.html" ? "/" : `/${assetPath.slice(0, -5).replace(/\/index$/, "")}`;
     routes[pageRoute] = `/${assetPath}`;
     if (pageRoute !== "/") routes[`${pageRoute}/`] = `/${assetPath}`;
   }
-  assets[`/${assetPath}`] = { type, body: data.toString("base64") };
 }
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist/server", { recursive: true });
@@ -45,24 +44,14 @@ const config = {
   csp: contentPolicy([...hashes].sort(), { header: true }),
   origin: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site",
 };
-const embeddedSource = `
-const embeddedAssets = ${JSON.stringify(assets)};
-const embeddedBinding = {
-  async fetch(request) {
-    const pathname = new URL(request.url).pathname;
-    const key = pathname === "/" ? "/index.html" : pathname;
-    if (!Object.hasOwn(embeddedAssets, key)) return new Response(null, { status: 404 });
-    const asset = embeddedAssets[key];
-    const bytes = request.method === "HEAD" ? null : Uint8Array.from(atob(asset.body), char => char.charCodeAt(0));
-    return new Response(bytes, { headers: { "Content-Type": asset.type } });
-  },
-};
+const workerEntry = `
 const securedWorker = createSiteWorker(${JSON.stringify(config)});
 export default {
-  fetch(request) { return securedWorker.fetch(request, { ASSETS: embeddedBinding }); },
+  fetch(request, env) {
+    return securedWorker.fetch(request, env);
+  },
 };
 `;
-const workerSource = `${runtime}\n${embeddedSource}`;
-if (Buffer.byteLength(workerSource) > 8_000_000) throw new Error("Embedded site exceeds safety budget; use a supported Worker-first asset delivery configuration before growing further.");
+const workerSource = `${runtime}\n${workerEntry}`;
 await writeFile("dist/server/index.js", workerSource);
 console.log(`Sites ESM Worker prepared with ${Object.keys(routes).length} protected routes.`);
