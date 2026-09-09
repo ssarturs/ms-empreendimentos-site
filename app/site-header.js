@@ -24,6 +24,8 @@ export function Icon({ name, size = 22 }) {
     close: <><path d="m6 6 12 12M18 6 6 18"/></>,
     copy: <><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></>,
     hammer: <><path d="m14 5 5 5M12 7l3-3 5 5-3 3M14 10 5 19M4 20l3-1"/></>,
+    image: <><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 4 4 2-2 5 5"/></>,
+    cube: <><path d="m12 2.8 8 4.6v9.2l-8 4.6-8-4.6V7.4Z"/><path d="m4.3 7.6 7.7 4.5 7.7-4.5M12 12.1v8.7"/></>,
     instagram: <><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></>,
     key: <><circle cx="8" cy="15" r="4"/><path d="m11 12 8-8m-3 3 2 2m-5 1 2 2"/></>,
     map: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
@@ -72,8 +74,7 @@ export function SiteHeader({ isHome = false }) {
           <a href={section("inicio")}>Início</a>
           <a href="/quem-somos" aria-current={isHome ? undefined : "page"}>Quem somos</a>
           <a href={section("servicos")}>Serviços</a>
-          <a href={section("projetos")}>Projetos</a>
-          <a href={section("plantas-3d")}>Plantas 3D</a>
+          <a href={section("projetos")}>Projetos & 3D</a>
           <a href={section("contato")}>Localização</a>
           <a href={section("contato")} className="navCta">Falar com a MS <Icon name="arrow" size={18} /></a>
         </nav>

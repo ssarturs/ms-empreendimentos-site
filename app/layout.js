@@ -1,11 +1,4 @@
 import "./globals.css";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import { resolveSiteOrigin } from "./site-origin.mjs";
-
-const siteOrigin = resolveSiteOrigin();
-
 // Production CSP is generated from the exact exported script bytes by
 // scripts/harden-export.mjs. Development remains compatible with Next HMR.
 
@@ -17,17 +10,17 @@ export const metadata = {
   openGraph: {
     title: "MS Empreendimentos | Construindo o presente",
     description: "Projetos, construção, reformas, administração de obras e soluções imobiliárias em Sergipe.",
-    url: siteOrigin,
+    url: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site",
     siteName: "MS Empreendimentos",
     locale: "pt_BR",
     type: "website",
-    images: [{ url: `${siteOrigin}/og.png`, width: 1731, height: 909, alt: "MS Empreendimentos — Construindo o presente. Realizando o futuro." }],
+    images: [{ url: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site/og.png", width: 1731, height: 909, alt: "MS Empreendimentos — Construindo o presente. Realizando o futuro." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "MS Empreendimentos | Construindo o presente",
     description: "Projetos, construção, reformas, administração de obras e soluções imobiliárias em Sergipe.",
-    images: [`${siteOrigin}/og.png`],
+    images: ["https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site/og.png"],
   },
 };
 

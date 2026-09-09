@@ -181,34 +181,58 @@ button { color: inherit; }
 .galleryHeading { position: relative; display: grid; grid-template-columns: 1.12fr .88fr; gap: 72px; align-items: flex-end; }
 .galleryHeading h2 { margin: 0; font-size: clamp(42px, 5vw, 64px); line-height: 1.02; letter-spacing: -3.2px; }
 .galleryHeading > p { max-width: 490px; margin: 0 0 5px; color: rgba(255,255,255,.62); font-size: 17px; line-height: 1.72; }
-.projectFilters { position: relative; margin: 44px 0 28px; display: flex; flex-wrap: wrap; gap: 10px; }
-.projectFilters button { min-height: 44px; padding: 0 18px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; color: rgba(255,255,255,.7); background: rgba(255,255,255,.025); font-size: 13px; font-weight: 750; cursor: pointer; transition: color .2s, background .2s, border-color .2s, transform .2s; }
-.projectFilters button:hover { color: #fff; border-color: rgba(184,117,42,.7); transform: translateY(-2px); }
-.projectFilters button.active { color: #17191b; background: #c68a45; border-color: #c68a45; }
-.galleryCarousel { position: relative; }
-.galleryCarousel .swiper { overflow: visible; padding: 0 1px 54px; }
-.galleryCarousel .swiper-slide { height: auto; }
-.galleryCard { position: relative; min-height: 540px; height: 100%; overflow: hidden; border-radius: 16px; background: #272827; box-shadow: 0 24px 55px rgba(0,0,0,.24); }
-.galleryCard > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .75s cubic-bezier(.22,1,.36,1); }
-.galleryShade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,9,9,.94) 0%, rgba(8,9,9,.28) 54%, rgba(8,9,9,.08) 100%); transition: background .35s; }
-.galleryMeta { position: absolute; z-index: 2; left: 30px; right: 30px; bottom: 30px; transition: transform .4s cubic-bezier(.22,1,.36,1), opacity .3s; }
-.galleryMeta small { color: #e0b37e; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
-.galleryMeta h3 { margin: 9px 0 5px; font-size: 31px; letter-spacing: -1px; }
-.galleryMeta p { margin: 0; color: rgba(255,255,255,.7); font-size: 15px; }
-.galleryDetails { position: absolute; z-index: 3; left: 30px; right: 30px; bottom: 28px; opacity: 0; transform: translateY(24px); transition: opacity .35s, transform .4s cubic-bezier(.22,1,.36,1); }
-.galleryDetails p { max-width: 440px; margin: 0 0 19px; color: rgba(255,255,255,.78); font-size: 15px; line-height: 1.65; }
-.galleryDetails a { min-height: 46px; padding: 0 18px; display: inline-flex; align-items: center; gap: 18px; color: #17191b; background: #c68a45; border-radius: 999px; font-size: 13px; font-weight: 850; }
-.galleryCard:hover > img { transform: scale(1.07); }
-.galleryCard:hover .galleryShade { background: linear-gradient(to top, rgba(8,9,9,.98) 0%, rgba(8,9,9,.58) 66%, rgba(8,9,9,.12) 100%); }
-.galleryCard:hover .galleryMeta { opacity: 0; transform: translateY(-18px); }
-.galleryCard:hover .galleryDetails { opacity: 1; transform: translateY(0); }
-.galleryCarousel .swiper-button-prev, .galleryCarousel .swiper-button-next { top: auto; bottom: 0; width: 42px; height: 42px; margin: 0; color: #17191b; background: #c68a45; border-radius: 50%; }
-.galleryCarousel .swiper-button-prev { left: auto; right: 52px; }
-.galleryCarousel .swiper-button-next { right: 0; }
-.galleryCarousel .swiper-button-prev::after, .galleryCarousel .swiper-button-next::after { font-size: 14px; font-weight: 900; }
-.galleryCarousel .swiper-pagination { width: auto !important; left: 0 !important; right: 120px !important; bottom: 15px !important; text-align: left; }
-.galleryCarousel .swiper-pagination-bullet { width: 26px; height: 3px; margin: 0 5px 0 0 !important; border-radius: 2px; background: rgba(255,255,255,.38); opacity: 1; }
-.galleryCarousel .swiper-pagination-bullet-active { background: #c68a45; }
+.portfolioGrid { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 48px; align-items: start; }
+.projectCard { min-width: 0; overflow: hidden; color: #f6f3ee; background: linear-gradient(155deg, #262829, #202223 72%); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; box-shadow: 0 28px 64px rgba(0,0,0,.24); content-visibility: auto; contain-intrinsic-size: auto 780px; transition: transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s; }
+.projectCard:hover { transform: translateY(-4px); border-color: rgba(198,138,69,.34); box-shadow: 0 34px 74px rgba(0,0,0,.32); }
+.projectCardHeader { padding: 28px 28px 24px; }
+.projectCardKicker { display: flex; align-items: center; gap: 12px; color: #d7a66d; font-size: 11px; font-weight: 850; letter-spacing: 1.5px; text-transform: uppercase; }
+.projectCardKicker span:first-child { width: 34px; height: 34px; display: grid; place-items: center; color: #17191b; background: #c68a45; border-radius: 50%; letter-spacing: 0; }
+.projectCardHeader h3 { margin: 20px 0 10px; font-size: clamp(28px, 3vw, 36px); line-height: 1.08; letter-spacing: -1.4px; }
+.projectCardHeader > p { min-height: 50px; margin: 0; color: rgba(255,255,255,.66); font-size: 15px; line-height: 1.65; }
+.projectBadges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 21px; }
+.projectBadges span { min-height: 28px; padding: 6px 10px; display: inline-flex; align-items: center; color: #e0b37e; background: rgba(198,138,69,.1); border: 1px solid rgba(198,138,69,.28); border-radius: 999px; font-size: 10px; font-weight: 900; letter-spacing: .9px; }
+.projectFacts { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 7px; }
+.projectFacts li { min-height: 32px; padding: 7px 11px; display: flex; align-items: center; color: rgba(255,255,255,.68); background: rgba(255,255,255,.045); border-radius: 6px; font-size: 12px; font-weight: 650; }
+.projectFacts li::before { content: ""; width: 5px; height: 5px; margin-right: 8px; flex: 0 0 auto; background: #c68a45; border-radius: 50%; }
+.projectMediaPanel { position: relative; overflow: hidden; background: #121414; border-block: 1px solid rgba(255,255,255,.08); }
+.projectMediaImage { width: 100%; aspect-ratio: 16 / 10; display: block; object-fit: cover; animation: mediaReveal .36s ease both; }
+.projectMediaCaption { min-height: 50px; margin: 0; padding: 13px 18px; display: flex; align-items: center; color: rgba(255,255,255,.64); background: #181a1b; border-top: 1px solid rgba(255,255,255,.07); font-size: 12px; line-height: 1.45; }
+.projectViewerLoading { min-height: 420px; display: grid; place-items: center; color: #555951; background: linear-gradient(145deg, #f5f1e8, #d9d4c9); font-size: 14px; }
+.projectMediaTabs { padding: 12px 14px; display: flex; gap: 7px; overflow-x: auto; background: #202223; border-bottom: 1px solid rgba(255,255,255,.08); scrollbar-width: thin; scrollbar-color: rgba(198,138,69,.55) transparent; }
+.projectMediaTabs button { min-height: 43px; padding: 0 13px; flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,.62); background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.11); border-radius: 999px; font-size: 12px; font-weight: 800; cursor: pointer; transition: color .2s, background .2s, border-color .2s; }
+.projectMediaTabs button:hover { color: #fff; border-color: rgba(198,138,69,.6); }
+.projectMediaTabs button.active { color: #161819; background: #c68a45; border-color: #c68a45; }
+.projectMediaTabs button:focus-visible, .projectCta:focus-visible, .interiorTourControls button:focus-visible { outline: 3px solid #df9c4d; outline-offset: 2px; }
+.projectCardFooter { min-height: 82px; padding: 15px 18px 16px 26px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.projectCardFooter > span { color: rgba(255,255,255,.48); font-size: 12px; }
+.projectCta { min-height: 49px; padding: 0 17px; display: inline-flex; align-items: center; gap: 10px; color: #17191b; background: #c68a45; border-radius: 999px; font-size: 12px; font-weight: 900; transition: background .2s, transform .2s; }
+.projectCta:hover { background: #d99b53; transform: translateY(-2px); }
+.projectCta svg:last-child { margin-left: 4px; }
+.projectTeaser { position: relative; min-height: 715px; isolation: isolate; background: linear-gradient(135deg, #111314 0%, #222526 58%, #181a1b 100%); }
+.teaserBlueprint { position: absolute; z-index: -1; inset: 0; opacity: .42; background: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px), radial-gradient(circle at 76% 24%, rgba(198,138,69,.4), transparent 26%); background-size: 42px 42px, 42px 42px, auto; }
+.teaserBlueprint::before, .teaserBlueprint::after { content: ""; position: absolute; border: 1px solid rgba(198,138,69,.23); transform: rotate(-8deg); }
+.teaserBlueprint::before { width: 58%; height: 35%; right: -3%; top: 26%; }
+.teaserBlueprint::after { width: 38%; height: 27%; right: 18%; top: 37%; }
+.teaserContent { min-height: 715px; padding: 28px; display: flex; flex-direction: column; }
+.projectTeaser .projectBadges { margin-top: 30px; }
+.teaserCopy { max-width: 440px; margin-block: auto; }
+.teaserMonogram { display: block; margin-bottom: 21px; color: rgba(198,138,69,.24); font-size: 92px; font-weight: 950; line-height: .8; letter-spacing: -8px; }
+.teaserCopy h3 { max-width: 390px; margin: 0 0 18px; font-size: clamp(38px, 4vw, 54px); line-height: .98; letter-spacing: -2.6px; }
+.teaserCopy p { max-width: 410px; margin: 0; color: rgba(255,255,255,.68); font-size: 16px; line-height: 1.7; }
+.teaserCta { width: fit-content; max-width: 100%; border-radius: 8px; }
+.interiorTour { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: #17191b; }
+.interiorTour > img { width: 100%; height: 100%; display: block; object-fit: cover; animation: mediaReveal .36s ease both; }
+.interiorTourShade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(8,9,9,.8), transparent 52%); }
+.interiorTourLabel { position: absolute; z-index: 2; left: 19px; bottom: 18px; display: grid; gap: 5px; }
+.interiorTourLabel small { color: #e1ac6f; font-size: 9px; font-weight: 900; letter-spacing: 1px; }
+.interiorTourLabel strong { font-size: 15px; }
+.interiorTourControls { position: absolute; z-index: 3; right: 15px; bottom: 14px; display: flex; align-items: center; gap: 7px; }
+.interiorTourControls button { width: 42px; height: 42px; padding: 0; display: grid; place-items: center; color: #161819; background: #c68a45; border: 0; border-radius: 50%; cursor: pointer; }
+.interiorTourControls button:first-child svg { transform: rotate(180deg); }
+.interiorTourDots { display: flex; gap: 4px; padding: 5px 7px; background: rgba(18,20,20,.7); border-radius: 999px; }
+.interiorTourDots span { width: 5px; height: 5px; background: rgba(255,255,255,.35); border-radius: 50%; }
+.interiorTourDots span.active { background: #d99b53; }
+@keyframes mediaReveal { from { opacity: .35; transform: scale(1.012); } to { opacity: 1; transform: scale(1); } }
 
 .contactSection { padding: 103px 0 25px; color: white; background: #17191b; position: relative; overflow: hidden; }
 .contactSection::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px); background-size: 72px 72px; }
@@ -275,6 +299,8 @@ button { color: inherit; }
   .sectionHeading { gap: 40px; }
   .galleryHeading { grid-template-columns: 1fr; gap: 26px; }
   .galleryHeading > p { max-width: 650px; }
+  .portfolioGrid { grid-template-columns: minmax(0, 1fr); }
+  .projectCard { width: min(720px, 100%); margin-inline: auto; }
   .projectMedia { height: 310px; }
   .projectCopy { align-items: flex-start; flex-direction: column; }
   .servicesGrid { grid-template-columns: repeat(2, 1fr); }
@@ -323,16 +349,34 @@ button { color: inherit; }
   .projectsSection { padding-bottom: 88px; }
   .galleryHeading h2 { font-size: clamp(39px, 11.5vw, 54px); letter-spacing: -2.4px; }
   .galleryHeading > p { font-size: 16px; }
-  .projectFilters { margin: 34px -16px 24px 0; padding-right: 16px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-  .projectFilters::-webkit-scrollbar { display: none; }
-  .projectFilters button { flex: 0 0 auto; }
-  .galleryCard { min-height: 440px; border-radius: 12px; }
-  .galleryMeta { left: 22px; right: 22px; bottom: 96px; }
-  .galleryMeta h3 { font-size: 27px; }
-  .galleryDetails { left: 22px; right: 22px; bottom: 22px; opacity: 1; transform: none; }
-  .galleryDetails p { display: none; }
-  .galleryCard:hover .galleryMeta { opacity: 1; transform: none; }
-  .galleryDetails a { min-height: 44px; }
+  .portfolioGrid { margin-top: 34px; gap: 18px; }
+  .projectCard { border-radius: 14px; }
+  .projectCard:hover { transform: none; }
+  .projectCardHeader { padding: 22px 20px 20px; }
+  .projectCardHeader h3 { margin-top: 17px; font-size: 29px; }
+  .projectCardHeader > p { min-height: 0; font-size: 14px; }
+  .projectBadges { margin-top: 17px; }
+  .projectBadges span { font-size: 9px; }
+  .projectFacts { flex-wrap: nowrap; margin: 15px -20px 0 0; padding-right: 20px; overflow-x: auto; scrollbar-width: none; }
+  .projectFacts::-webkit-scrollbar { display: none; }
+  .projectFacts li { flex: 0 0 auto; }
+  .projectMediaImage, .interiorTour { aspect-ratio: 4 / 3; }
+  .projectMediaCaption { min-height: 54px; padding-inline: 15px; }
+  .projectMediaTabs { padding-inline: 10px; }
+  .projectMediaTabs button { min-height: 44px; }
+  .projectCardFooter { padding: 16px; align-items: stretch; flex-direction: column; }
+  .projectCardFooter > span { display: none; }
+  .projectCta { width: 100%; min-height: 52px; justify-content: center; }
+  .projectCta svg:last-child { margin-left: auto; }
+  .projectTeaser, .teaserContent { min-height: 580px; }
+  .teaserContent { padding: 22px 20px; }
+  .teaserMonogram { font-size: 76px; }
+  .teaserCopy h3 { font-size: clamp(38px, 12vw, 50px); }
+  .teaserCopy p { font-size: 15px; }
+  .teaserCta { padding-inline: 14px; justify-content: flex-start; font-size: 11px; }
+  .interiorTourLabel { left: 14px; bottom: 14px; }
+  .interiorTourControls { right: 11px; bottom: 10px; }
+  .interiorTourDots { display: none; }
   .projectsIntro { align-items: flex-start; flex-direction: column; }
   .projectsFeature { grid-template-columns: 1fr; margin-bottom: 48px; }
   .projectMedia { height: 300px; }
@@ -436,6 +480,12 @@ button { color: inherit; }
 
 .floorPlansSection { padding: 100px 0; border-top: 1px solid var(--line); background: var(--surface-2); }
 .floorPlansSection .sectionHeading { margin-bottom: 45px; }
+.planSelector { display: flex; flex-wrap: wrap; gap: 10px; margin: -17px 0 34px; }
+.planSelector button { min-height: 62px; padding: 11px 18px; display: grid; gap: 5px; text-align: left; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); background: rgba(255,255,255,.025); font-size: 14px; font-weight: 750; cursor: pointer; transition: border-color .2s, color .2s, background .2s, transform .2s; }
+.planSelector button:hover { color: var(--text); border-color: rgba(198,138,69,.65); transform: translateY(-2px); }
+.planSelector button.active { color: #17191b; border-color: #c68a45; background: #c68a45; }
+.planSelector small { color: var(--orange-bright); font-size: 8px; font-weight: 900; letter-spacing: 1.3px; }
+.planSelector button.active small { color: #4a2d0d; }
 .planShowcase { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr); gap: 40px; align-items: center; }
 .planInformation { min-width: 0; }
 .planNumber { color: var(--orange-bright); font-size: 11px; letter-spacing: 1.8px; font-weight: 800; }
@@ -447,10 +497,20 @@ button { color: inherit; }
 .planInformation .button { margin-top: 15px; }
 .planIllustrationNote { margin: 22px 0 0; color: #aeb0ae; font-size: 12px; line-height: 1.65; }
 .planViewerShell { min-width: 0; overflow: hidden; border-radius: 16px; background: linear-gradient(145deg, #f5f1e8, #e3e0d7); color: #242723; border: 1px solid rgba(255,255,255,.18); }
+.planViewModes { min-height: 54px; padding: 7px; display: flex; gap: 6px; align-items: center; justify-content: center; background: #252726; border-bottom: 1px solid rgba(255,255,255,.1); }
+.planViewModes button { min-height: 39px; padding: 0 17px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; color: rgba(255,255,255,.72); background: rgba(255,255,255,.04); font-size: 12px; font-weight: 800; cursor: pointer; transition: color .2s, background .2s, border-color .2s; }
+.planViewModes button:hover { color: #fff; border-color: rgba(217,147,67,.7); }
+.planViewModes button.active { color: #17191b; background: #d99343; border-color: #d99343; }
+.planViewModes button:focus-visible { outline: 3px solid var(--orange-bright); outline-offset: 2px; }
 .planPoster { min-height: 540px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 22px 18px 30px; }
 .planPoster img { display: block; width: 100%; height: auto; max-height: 430px; object-fit: contain; }
 .planLaunch { flex: 0 0 auto; margin-top: 16px; cursor: pointer; }
 .planInteractive { position: relative; padding-bottom: 10px; }
+.turntablePlan { background: radial-gradient(circle at 50% 42%, #f3efe5 0%, #d7d3c9 68%, #c3beb2 100%); }
+.turntablePlan:fullscreen { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(circle at 50% 42%, #f3efe5 0%, #cac5b9 66%, #aaa397 100%); }
+.turntablePlan:fullscreen .planStage { flex: 1 1 auto; height: auto; min-height: 0; }
+.turntablePlan:fullscreen .planControls { flex: 0 0 auto; }
+.turntablePlan:fullscreen .planGestureHint { flex: 0 0 auto; }
 .planStage { height: 450px; width: 100%; touch-action: none; }
 .planStage canvas { display: block; width: 100%; height: 100%; }
 .planLoading { min-height: 540px; display: grid; place-items: center; padding: 24px; }
@@ -464,6 +524,30 @@ button { color: inherit; }
 .planControls button:disabled { opacity: .5; cursor: default; }
 .planControls button:focus-visible, .planLaunch:focus-visible { outline: 3px solid var(--orange-bright); outline-offset: 3px; }
 .planGestureHint { margin: 5px 16px 10px; text-align: center; font-size: 11px; line-height: 1.6; color: #575b52; }
+.projectMediaPanel .planInteractive { padding-bottom: 6px; }
+.projectMediaPanel .planStage { height: 360px; }
+.projectMediaPanel .planControls { padding-top: 10px; }
+.projectMediaPanel .planGestureHint { margin-bottom: 7px; }
+
+.imagePlanInteractive { position: relative; padding-bottom: 7px; background: #ddd8ce; }
+.imagePlanViewport { position: relative; aspect-ratio: 16 / 9; width: 100%; overflow: hidden; background: #eeeae2; touch-action: none; cursor: grab; user-select: none; }
+.imagePlanViewport:active { cursor: grabbing; }
+.imagePlanViewport:fullscreen { width: 100vw; height: 100vh; aspect-ratio: auto; display: grid; place-items: center; background: #111313; }
+.imagePlanCanvas { position: absolute; inset: 0; transform-origin: center; will-change: transform; transition: transform .18s ease-out; }
+.imagePlanViewport:active .imagePlanCanvas { transition: none; }
+.imagePlanCanvas > img { width: 100%; height: 100%; display: block; object-fit: contain; pointer-events: none; }
+.planHotspot { position: absolute; z-index: 3; width: 35px; height: 35px; display: grid; place-items: center; transform: translate(-50%, -50%) scale(var(--hotspot-scale)); border: 2px solid rgba(255,255,255,.95); border-radius: 50%; color: #fff; background: rgba(23,25,27,.88); box-shadow: 0 7px 18px rgba(0,0,0,.26); cursor: pointer; transform-origin: center; transition: color .2s, background .2s, box-shadow .2s; }
+.planHotspot span { font-size: 9px; font-weight: 900; letter-spacing: .2px; }
+.planHotspot:hover, .planHotspot.active { color: #17191b; background: #d99343; box-shadow: 0 0 0 6px rgba(217,147,67,.22), 0 8px 22px rgba(0,0,0,.28); }
+.planHotspot:focus-visible, .imagePlanToolbar button:focus-visible, .planSelector button:focus-visible { outline: 3px solid var(--orange-bright); outline-offset: 3px; }
+.planHotspotCard { position: absolute; z-index: 4; left: 18px; bottom: 18px; width: min(330px, calc(100% - 164px)); padding: 15px 17px; color: #fff; background: rgba(18,20,20,.9); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 12px 30px rgba(0,0,0,.22); backdrop-filter: blur(12px); pointer-events: none; }
+.planHotspotCard small { color: #e4a45d; font-size: 8px; font-weight: 900; letter-spacing: 1.2px; }
+.planHotspotCard strong { display: block; margin-top: 5px; font-size: 15px; }
+.planHotspotCard p { margin: 5px 0 0; color: rgba(255,255,255,.72); font-size: 11px; line-height: 1.45; }
+.imagePlanToolbar { position: absolute; z-index: 5; top: 14px; right: 14px; display: flex; gap: 5px; padding: 5px; color: #fff; background: rgba(18,20,20,.88); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(10px); }
+.imagePlanToolbar button { min-width: 39px; min-height: 39px; padding: 0 11px; border: 1px solid rgba(255,255,255,.13); color: #fff; background: rgba(255,255,255,.06); font-size: 11px; font-weight: 800; cursor: pointer; }
+.imagePlanToolbar button:first-child, .imagePlanToolbar button:nth-child(2) { font-size: 18px; }
+.imagePlanToolbar button:hover { color: #17191b; background: #d99343; }
 
 @media (min-width: 761px) and (max-width: 1000px) {
   .menuButton { display: block; }
@@ -479,11 +563,21 @@ button { color: inherit; }
 }
 @media (max-width: 760px) {
   .floorPlansSection { padding: 80px 0; }
+  .planSelector { display: grid; grid-template-columns: 1fr 1fr; margin-top: -8px; }
+  .planSelector button { min-height: 68px; padding: 10px 12px; font-size: 12px; }
   .planStage { height: clamp(280px, 72vw, 450px); }
+  .projectMediaPanel .planStage { height: clamp(260px, 68vw, 350px); }
+  .projectMediaPanel .planStage, .projectMediaPanel .planStage canvas { touch-action: pan-y !important; }
   .planLoading { min-height: 360px; }
   .planControls { gap: 5px; padding-inline: 8px; }
   .planControls button { padding-inline: 10px; }
   .planViewerShell { border-radius: 12px; }
   .planPoster { padding: 18px 12px 24px; }
   .planLaunch { width: auto; font-size: 13px; }
+  .imagePlanToolbar { top: 8px; right: 8px; }
+  .imagePlanToolbar button { min-width: 37px; min-height: 37px; padding-inline: 9px; }
+  .imagePlanToolbar button:last-child { display: none; }
+  .planHotspotCard { left: 8px; bottom: 8px; width: calc(100% - 16px); padding: 11px 12px; }
+  .planHotspotCard p { display: none; }
+  .planHotspot { width: 32px; height: 32px; }
 }

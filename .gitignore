@@ -14,4 +14,3 @@ upload/
 *.tgz
 *.tar.gz
 backups/
-.vercel/
