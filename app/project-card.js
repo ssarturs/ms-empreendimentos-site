@@ -4,6 +4,8 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Icon } from "./site-header";
 
+const LEADS_ENDPOINT = "https://msleads-worker.arturzinzito.workers.dev";
+
 const TurntablePlanViewer = dynamic(() => import("./turntable-plan-viewer"), {
   ssr: false,
   loading: () => <div className="projectViewerLoading" role="status">Preparando a maquete 3D…</div>,
@@ -61,6 +63,20 @@ export default function ProjectCard({ project, whatsappHref }) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     selectByOffset(event.key === "ArrowRight" ? 1 : -1);
+  }
+
+  function trackProjectLead() {
+    fetch(LEADS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tabela: "clientes",
+        nome: null,
+        origem: "site-projeto",
+        servico_interesse: project.title,
+        observacoes: "Clicou em 'Falar sobre este projeto'",
+      }),
+    }).catch(() => {});
   }
 
   return (
@@ -136,7 +152,7 @@ export default function ProjectCard({ project, whatsappHref }) {
 
       <footer className="projectCardFooter">
         <span>Gostou deste projeto?</span>
-        <a className="projectCta" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+        <a className="projectCta" href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={trackProjectLead}>
           <Icon name="whatsapp" size={20} />
           Falar sobre este projeto
           <Icon name="arrow" size={18} />
