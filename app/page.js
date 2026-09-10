@@ -117,6 +117,13 @@ const portfolioProjects = [
     whatsappMessage: "Olá! Gostaria de saber mais sobre o Projeto Cidade Nova.",
     media: [
       {
+        id: "planta-3d",
+        label: "Planta 3D",
+        kind: "interactive",
+        viewer: "planta-03",
+        caption: "Planta 03: gire a maquete aproximada, selecione os ambientes ou explore a imagem fotorrealista.",
+      },
+      {
         id: "sala",
         label: "Sala",
         kind: "image",

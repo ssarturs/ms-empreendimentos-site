@@ -1,6 +1,7 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { hardenHtml, headerRules, inlineScriptHashes } from "./security-policy.mjs";
+import { visualizationPath, validateVisualization } from "./preserved-visualization.mjs";
 
 const root = resolve("out");
 const files = (await readdir(root, { recursive: true })).filter((file) => file.endsWith(".html"));
@@ -8,6 +9,10 @@ if (!files.includes("index.html")) throw new Error("Static export missing");
 const hashes = new Set();
 for (const file of files) {
   const path = resolve(root, file);
+  if (file.replaceAll("\\", "/") === visualizationPath) {
+    validateVisualization(await readFile(path));
+    continue;
+  }
   const html = await readFile(path, "utf8");
   inlineScriptHashes(html).forEach((hash) => hashes.add(hash));
   await writeFile(path, hardenHtml(html));

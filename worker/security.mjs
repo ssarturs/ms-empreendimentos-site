@@ -1,16 +1,16 @@
 // Sites owns the private access gate. No identity or role is accepted from
 // browser input. Client/partner APIs need separate server authorization
 // before those currently nonexistent routes can be enabled.
-export function createSiteWorker({ routes, csp, origin }) {
+export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicies = {} }) {
   const notFound = () => new Response("Página não encontrada", {
     status: 404, headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 
-  async function secure(response, method) {
+  async function secure(response, method, preservedPolicy) {
     const headers = new Headers(response.headers);
     let body = method === "HEAD" ? null : response.body;
-    let policy = csp;
-    if (headers.get("Content-Type")?.startsWith("text/html") && method !== "HEAD") {
+    let policy = preservedPolicy || csp;
+    if (!preservedPolicy && headers.get("Content-Type")?.startsWith("text/html") && method !== "HEAD") {
       // Cloudflare parses a response-header nonce to authorize its own injected
       // bot-detection script. Never permit arbitrary inline JS for compatibility.
       const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
@@ -25,7 +25,7 @@ export function createSiteWorker({ routes, csp, origin }) {
     headers.set("Referrer-Policy", "no-referrer");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
     headers.set("Strict-Transport-Security", "max-age=31536000");
-    headers.set("Cache-Control", "private, no-store");
+    headers.set("Cache-Control", preservedPolicy ? "private, no-store, no-transform" : "private, no-store");
     headers.set("X-Robots-Tag", "noindex, nofollow");
     headers.delete("X-Powered-By");
     headers.delete("Access-Control-Allow-Origin");
@@ -37,6 +37,7 @@ export function createSiteWorker({ routes, csp, origin }) {
   return {
     async fetch(request, env) {
       let response;
+      let preservedPolicy;
       try {
         const url = new URL(request.url);
         if (url.protocol !== "https:") {
@@ -55,6 +56,9 @@ export function createSiteWorker({ routes, csp, origin }) {
           const assetUrl = new URL(routes[url.pathname], origin);
           // Do not forward credentials, cookies, query or identity headers.
           response = await env.ASSETS.fetch(new Request(assetUrl, { method: request.method }));
+          if (response.status === 200 && Object.hasOwn(preservedDocumentPolicies, assetUrl.pathname)) {
+            preservedPolicy = preservedDocumentPolicies[assetUrl.pathname];
+          }
           if (response.status === 404) response = notFound();
         }
       } catch {
@@ -64,7 +68,7 @@ export function createSiteWorker({ routes, csp, origin }) {
           status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" },
         });
       }
-      return secure(response, request.method);
+      return secure(response, request.method, preservedPolicy);
     },
   };
 }

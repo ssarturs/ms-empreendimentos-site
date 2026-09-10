@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { contentPolicy, inlineScriptHashes } from "./security-policy.mjs";
+import { visualizationPath, validateVisualization } from "./preserved-visualization.mjs";
 
 const files = await readdir("out", { recursive: true });
 const textFiles = files.filter((f) => /\.(html|js|css|json|txt|svg)$/.test(f));
@@ -22,6 +23,10 @@ for (const file of textFiles) {
   assert.ok(!secretPatterns.some((pattern) => pattern.test(text)), `Possible secret in ${file}; value withheld`);
   if (!file.endsWith(".html")) continue;
   documentCount++;
+  if (file.replaceAll("\\", "/") === visualizationPath) {
+    validateVisualization(await readFile(`out/${file}`));
+    continue;
+  }
   const expected = contentPolicy(inlineScriptHashes(text));
   assert.ok(text.includes(`<head><meta http-equiv="Content-Security-Policy" content="${expected}">`), `Missing early CSP: ${file}`);
   assert.ok(!/<[^>]+\son[a-z]+\s*=/i.test(text), `Inline event handler: ${file}`);

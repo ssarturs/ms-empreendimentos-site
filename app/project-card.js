@@ -6,6 +6,11 @@ import { Icon } from "./site-header";
 
 const LEADS_ENDPOINT = "https://msleads-worker.arturzinzito.workers.dev";
 
+const FloorPlanViewer = dynamic(() => import("./floor-plan-viewer"), {
+  ssr: false,
+  loading: () => <div className="projectViewerLoading" role="status">Preparando a maquete 3D…</div>,
+});
+
 const TurntablePlanViewer = dynamic(() => import("./turntable-plan-viewer"), {
   ssr: false,
   loading: () => <div className="projectViewerLoading" role="status">Preparando a maquete 3D…</div>,
@@ -116,6 +121,10 @@ export default function ProjectCard({ project, whatsappHref }) {
         )}
 
         {activeMedia.kind === "gallery" && <InteriorTour slides={activeMedia.slides} compact />}
+
+        {activeMedia.kind === "interactive" && activeMedia.viewer === "planta-03" && (
+          <FloorPlanViewer />
+        )}
 
         {activeMedia.kind === "interactive" && activeMedia.viewer === "lamarao-360" && (
           <TurntablePlanViewer />

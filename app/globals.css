@@ -195,6 +195,7 @@ button { color: inherit; }
 .projectFacts li { min-height: 32px; padding: 7px 11px; display: flex; align-items: center; color: rgba(255,255,255,.68); background: rgba(255,255,255,.045); border-radius: 6px; font-size: 12px; font-weight: 650; }
 .projectFacts li::before { content: ""; width: 5px; height: 5px; margin-right: 8px; flex: 0 0 auto; background: #c68a45; border-radius: 50%; }
 .projectMediaPanel { position: relative; overflow: hidden; background: #121414; border-block: 1px solid rgba(255,255,255,.08); }
+.planEmbeddedViewer { display: block; width: 100%; height: 790px; border: 0; color-scheme: dark; }
 .projectMediaImage { width: 100%; aspect-ratio: 16 / 10; display: block; object-fit: cover; animation: mediaReveal .36s ease both; }
 .projectMediaCaption { min-height: 50px; margin: 0; padding: 13px 18px; display: flex; align-items: center; color: rgba(255,255,255,.64); background: #181a1b; border-top: 1px solid rgba(255,255,255,.07); font-size: 12px; line-height: 1.45; }
 .projectViewerLoading { min-height: 420px; display: grid; place-items: center; color: #555951; background: linear-gradient(145deg, #f5f1e8, #d9d4c9); font-size: 14px; }

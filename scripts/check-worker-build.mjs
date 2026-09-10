@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
 import { inlineScriptHashes } from "./security-policy.mjs";
+import { visualizationPath, validateVisualization } from "./preserved-visualization.mjs";
 
 const source = await readFile("dist/server/index.js", "utf8");
 const { default: worker } = await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
@@ -36,6 +37,19 @@ const env = {
 for (const path of ["/", ...files.map(f => `/${f}`)]) {
   const response = await worker.fetch(new Request(origin + path), env);
   assert.equal(response.status, 200, `Build route failed: ${path}`);
+  if (path === `/${visualizationPath}`) {
+    const expected = await readFile(`public/${visualizationPath}`);
+    const policy = validateVisualization(expected);
+    assert.equal(response.headers.get("Content-Security-Policy"), policy);
+    assert.equal(response.headers.get("Cache-Control"), "private, no-store, no-transform");
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()), expected, "Visualization changed through ASSETS");
+    const head = await worker.fetch(new Request(origin + path, { method: "HEAD" }), env);
+    assert.equal(head.status, 200);
+    assert.equal(head.headers.get("Content-Security-Policy"), policy);
+    assert.equal(head.headers.get("Cache-Control"), "private, no-store, no-transform");
+    assert.equal(await head.text(), "");
+    continue;
+  }
   assert.equal(response.headers.get("Cache-Control"), "private, no-store");
   if (path.endsWith(".glb")) assert.equal(response.headers.get("Content-Type"), "model/gltf-binary");
   const bytes = Buffer.from(await response.arrayBuffer());

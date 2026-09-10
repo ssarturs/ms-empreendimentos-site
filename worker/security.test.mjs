@@ -96,3 +96,27 @@ test("HTML gets a fresh header nonce compatible with CDN bot detection", async (
   secureHeaders(first);
   secureHeaders(second);
 });
+
+test("an isolated uploaded document retains its CSP, sandbox and exact bytes", async () => {
+  const documentPath = "/modelos/planta-03-interativa.html";
+  const policy = "default-src 'none'; script-src 'unsafe-inline'; frame-ancestors 'self'";
+  const html = '<!doctype html>\r\n<meta http-equiv="Content-Security-Policy" content="default-src \'none\'">\r\n<iframe sandbox="allow-scripts"></iframe>';
+  const isolatedWorker = createSiteWorker({ origin, csp,
+    routes: { "/": "/", [documentPath]: documentPath },
+    preservedDocumentPolicies: { [documentPath]: policy },
+  });
+  const isolatedEnv = { ASSETS: { fetch: async () => new Response(html, {
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  }) } };
+  for (const method of ["GET", "HEAD"]) {
+    const response = await isolatedWorker.fetch(request(documentPath, { method }), isolatedEnv);
+    assert.equal(response.headers.get("Content-Security-Policy"), policy);
+    assert.equal(response.headers.get("Cache-Control"), "private, no-store, no-transform");
+    assert.equal(await response.text(), method === "HEAD" ? "" : html);
+  }
+  secureHeaders(await isolatedWorker.fetch(request("/"), isolatedEnv));
+  secureHeaders(await isolatedWorker.fetch(request(documentPath, { method: "POST" }), isolatedEnv));
+  secureHeaders(await isolatedWorker.fetch(request(documentPath), {
+    ASSETS: { fetch: async () => new Response("missing", { status: 404 }) },
+  }));
+});

@@ -1,13 +1,15 @@
 import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { contentPolicy, inlineScriptHashes } from "./security-policy.mjs";
+import { visualizationPath, validateVisualization } from "./preserved-visualization.mjs";
 
-// Sites serves matching static assets before calling the Worker. Embed this
-// small institutional export so every response goes through the policy code.
+// Cloudflare Assets stores the export separately; the Worker applies its policy
+// before returning each asset, including the byte-preserved visualization.
 // Next/OpenNext is used only at build time, never in the hosted runtime.
 const files = await readdir("out", { recursive: true, withFileTypes: true });
 const routes = { "/": "/", "/favicon.ico": "/icon.svg" };
 const hashes = new Set();
+const preservedDocumentPolicies = {};
 const mimeTypes = {
   html: "text/html; charset=utf-8", js: "text/javascript; charset=utf-8",
   css: "text/css; charset=utf-8", json: "application/json; charset=utf-8",
@@ -21,7 +23,9 @@ for (const entry of files) {
   const assetPath = relative("out", join(entry.parentPath, entry.name)).split(sep).join("/");
   if (assetPath === "_headers") continue;
   const data = await readFile(join("out", assetPath));
-  if (assetPath.endsWith(".html")) {
+  if (assetPath === visualizationPath) {
+    preservedDocumentPolicies[`/${assetPath}`] = validateVisualization(data);
+  } else if (assetPath.endsWith(".html")) {
     inlineScriptHashes(data.toString("utf8")).forEach(hash => hashes.add(hash));
   }
   if (!mimeTypes[assetPath.split(".").at(-1)]) {
@@ -41,6 +45,7 @@ await cp(".openai/hosting.json", "dist/.openai/hosting.json");
 const runtime = await readFile("worker/security.mjs", "utf8");
 const config = {
   routes,
+  preservedDocumentPolicies,
   csp: contentPolicy([...hashes].sort(), { header: true }),
   origin: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site",
 };
