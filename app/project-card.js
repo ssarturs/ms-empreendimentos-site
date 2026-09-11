@@ -89,7 +89,7 @@ export default function ProjectCard({ project, whatsappHref }) {
       <header className="projectCardHeader">
         <div className="projectCardKicker">
           <span>{project.number}</span>
-          <span>{project.location}</span>
+          {project.location && <span>{project.location}</span>}
         </div>
         <h3 id={`${project.id}-title`}>{project.title}</h3>
         <p>{project.description}</p>
