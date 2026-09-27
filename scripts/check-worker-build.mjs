@@ -6,7 +6,7 @@ import { visualizationPath, validateVisualization } from "./preserved-visualizat
 const source = await readFile("dist/server/index.js", "utf8");
 const { default: worker } = await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
 assert.equal(typeof worker.fetch, "function", "Missing ESM fetch handler");
-const origin = "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site";
+const origin = "https://msempreendimentos.inf.br";
 const files = (await readdir("out", { recursive: true })).map(f => f.replaceAll("\\", "/")).filter(f => /\.(html|js|css|json|txt|svg|jpe?g|png|glb)$/.test(f));
 const mimeTypes = {
   html: "text/html; charset=utf-8", js: "text/javascript; charset=utf-8",
@@ -50,7 +50,7 @@ for (const path of ["/", ...files.map(f => `/${f}`)]) {
     assert.equal(await head.text(), "");
     continue;
   }
-  assert.equal(response.headers.get("Cache-Control"), "private, no-store");
+  assert.equal(response.headers.get("Cache-Control"), "public, max-age=3600");
   if (path.endsWith(".glb")) assert.equal(response.headers.get("Content-Type"), "model/gltf-binary");
   const bytes = Buffer.from(await response.arrayBuffer());
   let expected = await readFile(`out${path === "/" ? "/index.html" : path}`);

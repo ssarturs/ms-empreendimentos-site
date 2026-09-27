@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createSiteWorker } from "./security.mjs";
 
-const origin = "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site";
+const origin = "https://msempreendimentos.inf.br";
 const csp = "default-src 'self'; script-src 'self'; frame-ancestors 'self' https://chatgpt.com";
 const worker = createSiteWorker({ origin, csp, routes: { "/": "/", "/icon.svg": "/icon.svg" } });
 const env = { ASSETS: { fetch: async () => new Response("<html>MS</html>", {
@@ -13,7 +13,7 @@ const request = (path = "/", options) => new Request(origin + path, options);
 function secureHeaders(response) {
   assert.equal(response.headers.get("Content-Security-Policy").replace(/ 'nonce-[^']+'/g, ""), csp);
   assert.equal(response.headers.get("X-Content-Type-Options"), "nosniff");
-  assert.equal(response.headers.get("Cache-Control"), "private, no-store");
+  assert.equal(response.headers.get("Cache-Control"), "public, max-age=3600");
   assert.equal(response.headers.get("Referrer-Policy"), "no-referrer");
   assert.equal(response.headers.get("Strict-Transport-Security"), "max-age=31536000");
   assert.equal(response.headers.get("X-Powered-By"), null);

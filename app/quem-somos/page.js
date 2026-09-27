@@ -1,6 +1,6 @@
 import { SiteHeader, Brand, Icon } from "../site-header";
 
-const origin = "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site";
+const origin = "https://msempreendimentos.inf.br";
 const title = "Quem somos | MS Empreendimentos";
 const description = "Conheça a história, os valores e a equipe da MS Empreendimentos. Mercado imobiliário, construção civil e reformas com confiança e atendimento próximo.";
 const teamPhoto = `${origin}/equipe/ms-empreendimentos-equipe.jpeg`;

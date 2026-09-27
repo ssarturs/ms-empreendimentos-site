@@ -47,7 +47,7 @@ const config = {
   routes,
   preservedDocumentPolicies,
   csp: contentPolicy([...hashes].sort(), { header: true }),
-  origin: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site",
+  origin: "https://msempreendimentos.inf.br",
 };
 const workerEntry = `
 const securedWorker = createSiteWorker(${JSON.stringify(config)});

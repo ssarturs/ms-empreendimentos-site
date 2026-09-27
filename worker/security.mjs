@@ -25,8 +25,7 @@ export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicie
     headers.set("Referrer-Policy", "no-referrer");
     headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
     headers.set("Strict-Transport-Security", "max-age=31536000");
-    headers.set("Cache-Control", preservedPolicy ? "private, no-store, no-transform" : "private, no-store");
-    headers.set("X-Robots-Tag", "noindex, nofollow");
+    headers.set("Cache-Control", preservedPolicy ? "private, no-store, no-transform" : "public, max-age=3600");
     headers.delete("X-Powered-By");
     headers.delete("Access-Control-Allow-Origin");
     return new Response(body, {

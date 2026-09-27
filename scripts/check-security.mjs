@@ -42,5 +42,5 @@ for (const file of tracked.filter((f) => /\.(js|mjs|ts|json|jsonc|md|ya?ml)$/.te
 }
 const headers = await readFile("out/_headers", "utf8");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"));
-assert.ok(headers.includes("Cache-Control: private, no-store"));
+assert.ok(headers.includes("Cache-Control: public, max-age=3600"));
 console.log(`PASS: ${documentCount} documents, ${textFiles.length} exported text assets; policy, links and basic secret checks.`);

@@ -58,7 +58,6 @@ export function headerRules(hashes) {
   Referrer-Policy: no-referrer
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000
-  Cache-Control: private, no-store
-  X-Robots-Tag: noindex, nofollow
+  Cache-Control: public, max-age=3600
 `;
 }

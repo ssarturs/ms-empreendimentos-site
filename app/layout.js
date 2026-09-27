@@ -6,21 +6,21 @@ export const metadata = {
   title: "MS Empreendimentos | Construindo o presente",
   description:
     "Projetos, construção, reformas, administração de obras e soluções imobiliárias em Sergipe.",
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "MS Empreendimentos | Construindo o presente",
     description: "Projetos, construção, reformas, administração de obras e soluções imobiliárias em Sergipe.",
-    url: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site",
+    url: "https://msempreendimentos.inf.br",
     siteName: "MS Empreendimentos",
     locale: "pt_BR",
     type: "website",
-    images: [{ url: "https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site/og.png", width: 1731, height: 909, alt: "MS Empreendimentos — Construindo o presente. Realizando o futuro." }],
+    images: [{ url: "https://msempreendimentos.inf.br/og.png", width: 1731, height: 909, alt: "MS Empreendimentos — Construindo o presente. Realizando o futuro." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "MS Empreendimentos | Construindo o presente",
     description: "Projetos, construção, reformas, administração de obras e soluções imobiliárias em Sergipe.",
-    images: ["https://ms-empreendimentos-socorro.arturzinzito.chatgpt.site/og.png"],
+    images: ["https://msempreendimentos.inf.br/og.png"],
   },
 };
 
