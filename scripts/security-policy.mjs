@@ -49,9 +49,14 @@ export function hardenHtml(html) {
   return clean.replace(/<head>/i, `<head><meta http-equiv="Content-Security-Policy" content="${policy}">`);
 }
 
-export function headerRules(hashes) {
+export function headerPolicy(hashes) {
   const csp = contentPolicy(hashes, { header: true });
   if (csp.length > 1800) throw new Error("CSP exceeds conservative header line budget");
+  return csp;
+}
+
+export function headerRules(hashes) {
+  const csp = headerPolicy(hashes);
   return `/*
   Content-Security-Policy: ${csp}
   X-Content-Type-Options: nosniff

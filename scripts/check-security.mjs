@@ -5,7 +5,10 @@ import { contentPolicy, inlineScriptHashes } from "./security-policy.mjs";
 import { visualizationPath, validateVisualization } from "./preserved-visualization.mjs";
 
 const files = await readdir("out", { recursive: true });
-const textFiles = files.filter((f) => /\.(html|js|css|json|txt|svg)$/.test(f));
+const headers = await readFile("out/_headers", "utf8");
+const headerPolicies = new Map([...headers.matchAll(/^(\/\S*)\n(?:  ! Content-Security-Policy\n)?  Content-Security-Policy: ([^\n]+)/gm)].map(([, path, policy]) => [path, policy]));
+assert.equal(headerPolicies.get("/*"), contentPolicy([], { header: true }), "Fallback CSP must not contain document hashes");
+const textFiles = files.filter((f) => /\.(html|js|css|json|txt|xml|svg)$/.test(f));
 const secretPatterns = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /\bAKIA[A-Z0-9]{16}\b/,
@@ -24,10 +27,14 @@ for (const file of textFiles) {
   if (!file.endsWith(".html")) continue;
   documentCount++;
   if (file.replaceAll("\\", "/") === visualizationPath) {
-    validateVisualization(await readFile(`out/${file}`));
+    const policy = validateVisualization(await readFile(`out/${file}`));
+    assert.equal(headerPolicies.get(`/${visualizationPath}`), policy, "Preserved document header CSP changed");
     continue;
   }
   const expected = contentPolicy(inlineScriptHashes(text));
+  const header = headerPolicies.get(`/${file.replaceAll("\\", "/")}`);
+  assert.equal(header, contentPolicy(inlineScriptHashes(text), { header: true }), `Missing or foreign document hashes in _headers: ${file}`);
+  assert.ok(header.length <= 1800, `CSP exceeds conservative header line budget: ${file}`);
   assert.ok(text.includes(`<head><meta http-equiv="Content-Security-Policy" content="${expected}">`), `Missing early CSP: ${file}`);
   assert.ok(!/<[^>]+\son[a-z]+\s*=/i.test(text), `Inline event handler: ${file}`);
   for (const match of text.matchAll(/<a\b[^>]*target="_blank"[^>]*>/gi)) {
@@ -36,11 +43,10 @@ for (const file of textFiles) {
 }
 // Heuristic checks; not a complete secret scanner or penetration test.
 const tracked = execFileSync("git", ["ls-files", "-z"], { encoding: "utf8" }).split("\0").filter(Boolean);
-for (const file of tracked.filter((f) => /\.(js|mjs|ts|json|jsonc|md|ya?ml)$/.test(f))) {
+for (const file of tracked.filter((f) => /\.(js|mjs|ts|json|jsonc|md|ya?ml|txt|xml)$/.test(f))) {
   const text = await readFile(file, "utf8");
   assert.ok(!secretPatterns.some((pattern) => pattern.test(text)), `Possible source secret in ${file}; value withheld`);
 }
-const headers = await readFile("out/_headers", "utf8");
 assert.ok(headers.includes("X-Content-Type-Options: nosniff"));
 assert.ok(headers.includes("Cache-Control: public, max-age=3600"));
 console.log(`PASS: ${documentCount} documents, ${textFiles.length} exported text assets; policy, links and basic secret checks.`);

@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { createSiteWorker } from "./security.mjs";
 
 const origin = "https://msempreendimentos.inf.br";
@@ -51,6 +52,60 @@ test("HEAD returns the same policy without a body", async () => {
   assert.equal(response.status, 200);
   assert.equal(await response.text(), "");
   secureHeaders(response);
+});
+
+test("missing fallback CSP is rejected instead of serving an empty policy", () => {
+  for (const invalid of [undefined, "", " "]) {
+    assert.throws(() => createSiteWorker({ origin, routes: {}, csp: invalid }), /Missing fallback CSP/);
+  }
+});
+
+test("unknown routes, missing policies and asset errors use the hash-free fallback", async () => {
+  const scopedWorker = createSiteWorker({ origin, csp,
+    routes: { "/page": "/page.html", "/empty": "/empty.html", "/unmapped": "/unmapped.html" },
+    documentPolicies: { "/page.html": `${csp}; img-src 'none'`, "/empty.html": "" },
+  });
+  for (const method of ["GET", "HEAD"]) {
+    for (const path of ["/missing", "/toString", "/__proto__", "/empty", "/unmapped"]) {
+      const response = await scopedWorker.fetch(request(path, { method }), env);
+      assert.equal(response.status, ["/empty", "/unmapped"].includes(path) ? 200 : 404);
+      secureHeaders(response);
+      if (method === "HEAD") assert.equal(await response.text(), "");
+    }
+    for (const status of [404, 503]) {
+      const response = await scopedWorker.fetch(request("/page", { method }), {
+        ASSETS: { fetch: async () => new Response(null, { status }) },
+      });
+      assert.equal(response.status, status);
+      secureHeaders(response);
+    }
+  }
+});
+
+test("SEO assets preserve MIME types, bytes and security headers for GET/HEAD", async () => {
+  const seoWorker = createSiteWorker({ origin, csp, routes: {
+    "/robots.txt": "/robots.txt", "/sitemap.xml": "/sitemap.xml",
+  } });
+  for (const [path, type] of [
+    ["/robots.txt", "text/plain; charset=utf-8"],
+    ["/sitemap.xml", "application/xml; charset=utf-8"],
+  ]) {
+    const content = await readFile(new URL(`../public${path}`, import.meta.url), "utf8");
+    for (const method of ["GET", "HEAD"]) {
+      const seoEnv = { ASSETS: { fetch: async assetRequest => {
+        assert.equal(assetRequest.url, origin + path);
+        assert.equal(assetRequest.method, method);
+        return new Response(method === "HEAD" ? null : content, {
+          headers: { "Content-Type": type, "X-Powered-By": "test", "Access-Control-Allow-Origin": "*" },
+        });
+      } } };
+      const response = await seoWorker.fetch(request(path, { method }), seoEnv);
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("Content-Type"), type);
+      assert.equal(await response.text(), method === "HEAD" ? "" : content);
+      secureHeaders(response);
+    }
+  }
 });
 
 test("HTTP redirects use the configured HTTPS origin, including // paths", async () => {

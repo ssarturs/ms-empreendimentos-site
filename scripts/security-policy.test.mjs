@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { contentPolicy, hardenHtml, headerRules, inlineScriptHashes } from "./security-policy.mjs";
+import { contentPolicy, hardenHtml, headerPolicy, headerRules, inlineScriptHashes } from "./security-policy.mjs";
 
 const body = "self.__next_f.push([0]);";
 const html = `<html><head><script src="/_next/static/a.js"></script></head><body><script>${body}</script></body></html>`;
@@ -31,4 +31,11 @@ test("anti-framing directive is header-only; allowed parent preserves ChatGPT", 
 });
 test("missing export head fails closed", () => {
   assert.throws(() => hardenHtml("<body>invalid</body>"));
+});
+
+test("the 1800-character header limit rejects an oversized document policy", () => {
+  const hashes = Array.from({ length: 26 }, (_, i) => `'sha256-${createHash("sha256").update(String(i)).digest("base64")}'`);
+  assert.ok(headerPolicy(hashes.slice(0, 25)).length <= 1800);
+  assert.throws(() => headerPolicy(hashes), /CSP exceeds conservative header line budget/);
+  assert.throws(() => headerRules(hashes), /CSP exceeds conservative header line budget/);
 });

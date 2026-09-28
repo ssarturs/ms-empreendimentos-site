@@ -1,20 +1,21 @@
 // Sites owns the private access gate. No identity or role is accepted from
 // browser input. Client/partner APIs need separate server authorization
 // before those currently nonexistent routes can be enabled.
-export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicies = {} }) {
+export function createSiteWorker({ routes, csp, origin, documentPolicies = {}, preservedDocumentPolicies = {} }) {
+  if (typeof csp !== "string" || !csp.trim()) throw new Error("Missing fallback CSP");
   const notFound = () => new Response("Página não encontrada", {
     status: 404, headers: { "Content-Type": "text/plain; charset=utf-8" },
   });
 
-  async function secure(response, method, preservedPolicy) {
+  async function secure(response, method, preservedPolicy, documentPolicy) {
     const headers = new Headers(response.headers);
     let body = method === "HEAD" ? null : response.body;
-    let policy = preservedPolicy || csp;
+    let policy = preservedPolicy || documentPolicy || csp;
     if (!preservedPolicy && headers.get("Content-Type")?.startsWith("text/html") && method !== "HEAD") {
       // Cloudflare parses a response-header nonce to authorize its own injected
       // bot-detection script. Never permit arbitrary inline JS for compatibility.
       const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
-      policy = csp.replace(/script-src ([^;]*)/, `$& 'nonce-${nonce}'`);
+      policy = policy.replace(/script-src ([^;]*)/, `$& 'nonce-${nonce}'`);
       // The actual HTTP policy now owns enforcement. A static meta policy would
       // reject the CDN's per-response nonce even when the header authorizes it.
       body = (await response.text()).replace(/<meta\b[^>]*http-equiv="Content-Security-Policy"[^>]*>/gi, "");
@@ -37,6 +38,7 @@ export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicie
     async fetch(request, env) {
       let response;
       let preservedPolicy;
+      let documentPolicy;
       try {
         const url = new URL(request.url);
         if (url.protocol !== "https:") {
@@ -57,6 +59,8 @@ export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicie
           response = await env.ASSETS.fetch(new Request(assetUrl, { method: request.method }));
           if (response.status === 200 && Object.hasOwn(preservedDocumentPolicies, assetUrl.pathname)) {
             preservedPolicy = preservedDocumentPolicies[assetUrl.pathname];
+          } else if (response.status === 200 && Object.hasOwn(documentPolicies, assetUrl.pathname)) {
+            documentPolicy = documentPolicies[assetUrl.pathname];
           }
           if (response.status === 404) response = notFound();
         }
@@ -67,7 +71,7 @@ export function createSiteWorker({ routes, csp, origin, preservedDocumentPolicie
           status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" },
         });
       }
-      return secure(response, request.method, preservedPolicy);
+      return secure(response, request.method, preservedPolicy, documentPolicy);
     },
   };
 }
